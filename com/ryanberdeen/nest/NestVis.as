@@ -11,11 +11,10 @@ package com.ryanberdeen.nest {
   public class NestVis extends Sprite {
     private var data:Object;
     private var visShape:Shape;
-    private var g:Graphics;
-    private var durationScale:Number;
     private var displayWidth:Number;
     private var displayHeight:Number;
     private var duration:Number;
+    private var durationScale:Number;
 
     private var startTime:Number;
     private var sound:Sound;
@@ -65,10 +64,6 @@ package com.ryanberdeen.nest {
       pointer.x = displayWidth / 2 - 5;
       addChild(pointer);
 
-      visShape = new Shape();
-      this.g = visShape.graphics;
-      addChild(visShape);
-
       barIndicator = new QuantumIndicator(data.bars, 200, 0x00ffff);
       barIndicator.x = 10;
       barIndicator.y = 10;
@@ -90,12 +85,8 @@ package com.ryanberdeen.nest {
       addChild(tatumIndicator);
 
       this.durationScale = 100;//(displayWidth - 20) / data.duration;
-      drawQuantums(data.sections, 100, 0x00ffff);
-      drawQuantums(data.bars, 70, 0xff0000);
-      drawQuantums(data.beats, 50);
-      drawQuantums(data.segments, 10);
-
-      visShape.cacheAsBitmap = true;
+      visShape = new QuantumTimeline(data, durationScale);
+      addChild(visShape);
 
       //addEventListener(MouseEvent.MOUSE_MOVE, mouseMoveHandler);
       addEventListener(MouseEvent.CLICK, mouseClickHandler);
@@ -143,15 +134,6 @@ package com.ryanberdeen.nest {
 
     private function enterFrameHandler(e:Event):void {
       setVisPosition(soundChannel.position);
-    }
-
-    private function drawQuantums(quantums:Array, height:Number, color:uint = 0x000000):void {
-      g.lineStyle(1, color);
-
-      for each (var quantum:Object in quantums) {
-        g.moveTo(quantum.start * durationScale, displayHeight);
-        g.lineTo(quantum.start * durationScale, displayHeight - height);
-      }
     }
 
     private function getCurrentTime():Number {
