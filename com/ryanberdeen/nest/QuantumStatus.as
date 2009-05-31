@@ -4,15 +4,16 @@ package com.ryanberdeen.nest {
     private var nextIndex:int = 0;
     private var currentPosition = -1;
     private var nextPosition:int = -1;
-    private var triggerDuration:Number;
-    private var startTime:Number = -1;
+    private var triggerStartOffset:Number;
+    private var triggerEndOffset:Number;
 
     private var triggerStartHandler:Function;
     private var triggerEndHandler:Function;
 
     public function QuantumStatus(quantums:Array, options:Object):void {
       this.quantums = quantums;
-      this.triggerDuration = options.triggerDuration || 100;
+      this.triggerStartOffset = options.triggerStartOffset || 0;
+      this.triggerEndOffset = options.triggerEndOffset || 100;
 
       triggerStartHandler = options.triggerStartHandler;
       triggerEndHandler = options.triggerEndHandler;
@@ -21,13 +22,13 @@ package com.ryanberdeen.nest {
     }
 
     public function set position(p:Number) {
-      if (currentPosition != -1 && currentPosition + triggerDuration <= p) {
+      if (currentPosition != -1 && currentPosition + triggerEndOffset <= p) {
         if (triggerEndHandler != null) {
           triggerEndHandler();
         }
       }
 
-      if (p >= nextPosition) {
+      if (p >= nextPosition + triggerStartOffset) {
         currentPosition = nextPosition;
         if (triggerStartHandler != null) {
           triggerStartHandler();
