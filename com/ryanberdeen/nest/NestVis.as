@@ -42,8 +42,8 @@ package com.ryanberdeen.nest {
       trace('sections: ' + data.sections.length);
       trace('bars: ' + data.bars.length);
       trace('beats: ' + data.beats.length);
-      trace('segments: ' + data.segments.length);
       trace('tatums: ' + data.tatums.length);
+      trace('segments: ' + data.segments.length);
 
       duration = data.duration * 1000;
 
@@ -74,15 +74,15 @@ package com.ryanberdeen.nest {
       beatIndicator.y = 10;
       addChild(beatIndicator);
 
-      segmentIndicator = new QuantumIndicator(data.segments, 50, 0xff00ff);
-      segmentIndicator.x = 150;
-      segmentIndicator.y = 10;
-      addChild(segmentIndicator);
-
-      tatumIndicator = new QuantumIndicator(data.tatums, 50, 0xdddddd);
-      tatumIndicator.x = 220;
+      tatumIndicator = new QuantumIndicator(data.tatums, 50, 0xff00ff);
+      tatumIndicator.x = 150;
       tatumIndicator.y = 10;
       addChild(tatumIndicator);
+
+      segmentIndicator = new QuantumIndicator(data.segments, 50, 0xdddddd);
+      segmentIndicator.x = 220;
+      segmentIndicator.y = 10;
+      addChild(segmentIndicator);
 
       this.durationScale = 100;//(displayWidth - 20) / data.duration;
       visShape = new QuantumTimeline(data, durationScale);
