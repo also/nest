@@ -9,6 +9,7 @@ package com.ryanberdeen.nest {
   public class Main extends Sprite {
     private var loader:URLLoader;
     private var nestVis:NestPlayer;
+    private var cubes:Cubes;
 
     public function Main():void {
       loader = new URLLoader();
@@ -16,6 +17,9 @@ package com.ryanberdeen.nest {
 
       var request:URLRequest = new URLRequest('http://static.ryanberdeen.com/projects/nest/lo.json');
       loader.load(request);
+
+      cubes = new Cubes();
+      addChild(cubes);
     }
 
     private function nestDataCompleteHandler(e:Event):void {
