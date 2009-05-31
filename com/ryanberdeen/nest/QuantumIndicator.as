@@ -24,8 +24,8 @@ package com.ryanberdeen.nest {
       visible = false;
     }
 
-    public function setPosition(p:Number) {
-      status.setPosition(p);
+    public function set position(p:Number) {
+      status.position = p;
     }
   }
 }

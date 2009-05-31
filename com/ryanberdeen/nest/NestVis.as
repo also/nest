@@ -4,23 +4,16 @@ package com.ryanberdeen.nest {
   import flash.display.Sprite;
   import flash.events.Event;
   import flash.events.MouseEvent;
-  import flash.media.Sound;
-  import flash.media.SoundChannel;
   import flash.net.URLRequest;
 
   public class NestVis extends Sprite {
     private var data:Object;
-    private var visShape:Shape;
     private var displayWidth:Number;
     private var displayHeight:Number;
     private var duration:Number;
     private var durationScale:Number;
 
-    private var startTime:Number;
-    private var sound:Sound;
-    private var soundChannel:SoundChannel;
-    private var soundChannelPosition:Number = 0;
-    private var playing:Boolean;
+    private var timeline:ScrollingQuantumTimeline;
 
     private var barIndicator:QuantumIndicator;
     private var beatIndicator:QuantumIndicator;
@@ -60,7 +53,7 @@ package com.ryanberdeen.nest {
       pointer.graphics.lineTo(0, 10);
       pointer.graphics.lineTo(5, 0);
       pointer.graphics.endFill();
-      pointer.y = displayHeight;
+      pointer.y = 130;
       pointer.x = displayWidth / 2 - 5;
       addChild(pointer);
 
@@ -84,60 +77,18 @@ package com.ryanberdeen.nest {
       segmentIndicator.y = 10;
       addChild(segmentIndicator);
 
-      this.durationScale = 100;//(displayWidth - 20) / data.duration;
-      visShape = new QuantumTimeline(data, durationScale);
-      addChild(visShape);
-
-      //addEventListener(MouseEvent.MOUSE_MOVE, mouseMoveHandler);
-      addEventListener(MouseEvent.CLICK, mouseClickHandler);
-      start();
+      durationScale = 100;//(displayWidth - 20) / data.duration;
+      timeline = new ScrollingQuantumTimeline(data, durationScale, displayWidth);
+      timeline.y = 80;
+      addChild(timeline);
     }
 
-    private function start():void {
-      startTime = getCurrentTime();
-      sound = new Sound();
-      sound.load(new URLRequest("http://static.ryanberdeen.com/projects/nest/lo.mp3"));
-      play();
-      addEventListener(Event.ENTER_FRAME, enterFrameHandler);
-    }
-
-    private function stop():void {
-      removeEventListener(Event.ENTER_FRAME, enterFrameHandler);
-    }
-
-    private function play():void {
-      soundChannel = sound.play(soundChannelPosition);
-      playing = true;
-    }
-
-    private function pause():void {
-      soundChannelPosition = soundChannel.position;
-      soundChannel.stop();
-      playing = false;
-    }
-
-    private function mouseMoveHandler(e:MouseEvent):void {
-      setVisPosition(e.localX / displayWidth);
-    }
-
-    private function mouseClickHandler(e:MouseEvent):void {
-      playing ? pause() : play();
-    }
-
-    private function setVisPosition(p:Number):void {
-      visShape.x = -p * (durationScale / 1000) + displayWidth / 2;
-      barIndicator.setPosition(p);
-      beatIndicator.setPosition(p);
-      segmentIndicator.setPosition(p);
-      tatumIndicator.setPosition(p);
-    }
-
-    private function enterFrameHandler(e:Event):void {
-      setVisPosition(soundChannel.position);
-    }
-
-    private function getCurrentTime():Number {
-      return new Date().getTime();
+    public function set position(p:Number):void {
+      timeline.position = p;
+      barIndicator.position = p;
+      beatIndicator.position = p;
+      segmentIndicator.position = p;
+      tatumIndicator.position = p;
     }
   }
 }

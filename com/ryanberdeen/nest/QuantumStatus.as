@@ -20,7 +20,7 @@ package com.ryanberdeen.nest {
       loadNextPosition();
     }
 
-    public function setPosition(p:Number) {
+    public function set position(p:Number) {
       if (currentPosition != -1 && currentPosition + triggerDuration <= p) {
         if (triggerEndHandler != null) {
           triggerEndHandler();
