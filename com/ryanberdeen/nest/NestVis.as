@@ -46,17 +46,6 @@ package com.ryanberdeen.nest {
       background.graphics.endFill();
       addChild(background);
 
-      var pointer:Shape = new Shape();
-      pointer.graphics.beginFill(0x000000);
-      pointer.graphics.moveTo(5, 0);
-      pointer.graphics.lineTo(10, 10);
-      pointer.graphics.lineTo(0, 10);
-      pointer.graphics.lineTo(5, 0);
-      pointer.graphics.endFill();
-      pointer.y = 130;
-      pointer.x = displayWidth / 2 - 5;
-      addChild(pointer);
-
       barIndicator = new QuantumIndicator(data.bars, 200, 0x00ffff);
       barIndicator.x = 10;
       barIndicator.y = 10;
