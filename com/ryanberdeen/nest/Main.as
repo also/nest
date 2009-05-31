@@ -14,7 +14,7 @@ package com.ryanberdeen.nest {
       loader = new URLLoader();
       loader.addEventListener(Event.COMPLETE, nestDataCompleteHandler);
       
-      var request:URLRequest = new URLRequest('http://static.ryanberdeen.com/projects/nest/pp.json');
+      var request:URLRequest = new URLRequest('http://static.ryanberdeen.com/projects/nest/lo.json');
       loader.load(request);
     }
     

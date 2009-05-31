@@ -22,12 +22,11 @@ package com.ryanberdeen.nest {
     private var soundChannel:SoundChannel;
     private var soundChannelPosition:Number = 0;
     private var playing:Boolean;
-    
-    private var nextBeatIndex:int = 0;
-    private var nextBeatPosition:int = -1;
-    private var beatVisibleDuration:Number = 100;
-    private var beatStartTime:Number = -1;
-    private var beatIndicator:Shape;
+
+    private var barIndicator:QuantumIndicator;
+    private var beatIndicator:QuantumIndicator;
+    private var segmentIndicator:QuantumIndicator;
+    private var tatumIndicator:QuantumIndicator;
 
     public function NestVis(data:Object, displayWidth:Number):void {
       this.data = data;
@@ -46,15 +45,15 @@ package com.ryanberdeen.nest {
       trace('beats: ' + data.beats.length);
       trace('segments: ' + data.segments.length);
       trace('tatums: ' + data.tatums.length);
-      
+
       duration = data.duration * 1000;
-      
+
       var background:Shape = new Shape();
       background.graphics.beginFill(0xffffff);
       background.graphics.drawRect(0, 0, displayWidth, displayHeight);
       background.graphics.endFill();
       addChild(background);
-      
+
       var pointer:Shape = new Shape();
       pointer.graphics.beginFill(0x000000);
       pointer.graphics.moveTo(5, 0);
@@ -65,23 +64,37 @@ package com.ryanberdeen.nest {
       pointer.y = displayHeight;
       pointer.x = displayWidth / 2 - 5;
       addChild(pointer);
-      
+
       visShape = new Shape();
       this.g = visShape.graphics;
       addChild(visShape);
-      
-      beatIndicator = new Shape();
-      beatIndicator.graphics.beginFill(0xffff00);
-      beatIndicator.graphics.drawCircle(30, 30, 30);
-      beatIndicator.graphics.endFill();
+
+      barIndicator = new QuantumIndicator(data.bars, 200, 0x00ffff);
+      barIndicator.x = 10;
+      barIndicator.y = 10;
+      addChild(barIndicator);
+
+      beatIndicator = new QuantumIndicator(data.beats, 200, 0xffff00);
+      beatIndicator.x = 80;
+      beatIndicator.y = 10;
       addChild(beatIndicator);
+
+      segmentIndicator = new QuantumIndicator(data.segments, 50, 0xff00ff);
+      segmentIndicator.x = 150;
+      segmentIndicator.y = 10;
+      addChild(segmentIndicator);
+
+      tatumIndicator = new QuantumIndicator(data.tatums, 50, 0xdddddd);
+      tatumIndicator.x = 220;
+      tatumIndicator.y = 10;
+      addChild(tatumIndicator);
 
       this.durationScale = 100;//(displayWidth - 20) / data.duration;
       drawQuantums(data.sections, 100, 0x00ffff);
       drawQuantums(data.bars, 70, 0xff0000);
       drawQuantums(data.beats, 50);
       drawQuantums(data.segments, 10);
-      
+
       visShape.cacheAsBitmap = true;
 
       //addEventListener(MouseEvent.MOUSE_MOVE, mouseMoveHandler);
@@ -92,8 +105,7 @@ package com.ryanberdeen.nest {
     private function start():void {
       startTime = getCurrentTime();
       sound = new Sound();
-      sound.load(new URLRequest("http://static.ryanberdeen.com/projects/nest/pp.mp3"));
-      loadNextBeatPosition();
+      sound.load(new URLRequest("http://static.ryanberdeen.com/projects/nest/lo.mp3"));
       play();
       addEventListener(Event.ENTER_FRAME, enterFrameHandler);
     }
@@ -101,12 +113,12 @@ package com.ryanberdeen.nest {
     private function stop():void {
       removeEventListener(Event.ENTER_FRAME, enterFrameHandler);
     }
-    
+
     private function play():void {
       soundChannel = sound.play(soundChannelPosition);
       playing = true;
     }
-    
+
     private function pause():void {
       soundChannelPosition = soundChannel.position;
       soundChannel.stop();
@@ -123,36 +135,12 @@ package com.ryanberdeen.nest {
 
     private function setVisPosition(p:Number):void {
       visShape.x = -p * (durationScale / 1000) + displayWidth / 2;
-      
-      if (beatStartTime != -1 && beatStartTime + beatVisibleDuration <= getCurrentTime()) {
-        hideBeatIndicator();
-      }
-      
-      if (p >= nextBeatPosition) {
-        beatHandler();
-        loadNextBeatPosition();
-      }
+      barIndicator.setPosition(p);
+      beatIndicator.setPosition(p);
+      segmentIndicator.setPosition(p);
+      tatumIndicator.setPosition(p);
     }
 
-    private function loadNextBeatPosition():void {
-      if (nextBeatIndex < data.beats.length) {
-        nextBeatPosition = data.beats[nextBeatIndex++].start * 1000;
-      }
-    }
-    
-    private function beatHandler():void {
-      showBeatIndicator();
-      beatStartTime = getCurrentTime();
-    }
-    
-    private function hideBeatIndicator():void {
-      beatIndicator.visible = false;
-    }
-    
-    private function showBeatIndicator():void {
-      beatIndicator.visible = true;
-    }
-  
     private function enterFrameHandler(e:Event):void {
       setVisPosition(soundChannel.position);
     }
