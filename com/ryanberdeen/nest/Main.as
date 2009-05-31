@@ -8,7 +8,7 @@ package com.ryanberdeen.nest {
 
   public class Main extends Sprite {
     private var loader:URLLoader;
-    private var nestVis:NestPlayer;
+    private var player:NestPlayer;
     private var cubes:Cubes;
 
     public function Main():void {
@@ -28,8 +28,21 @@ package com.ryanberdeen.nest {
     }
 
     private function addNestVis(data:Object):void {
-      nestVis = new NestPlayer(data, 'http://static.ryanberdeen.com/projects/nest/lo.mp3', stage.stageWidth);
-      addChild(nestVis);
+      player = new NestPlayer(data, 'http://static.ryanberdeen.com/projects/nest/lo.mp3', stage.stageWidth, {
+        bars: {
+          triggerStartHandler: cubes.barTriggerHandler,
+          triggerStartOffset: -50
+        },
+        beats: {
+          triggerStartHandler: cubes.beatTriggerHandler,
+          triggerStartOffset: -50
+        },
+        tatums: {
+          triggerStartHandler: cubes.tatumTriggerHandler,
+          triggerStartOffset: -50
+        }
+      });
+      addChild(player);
     }
   }
 }

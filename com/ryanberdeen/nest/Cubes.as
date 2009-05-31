@@ -11,15 +11,31 @@ package com.ryanberdeen.nest {
   import org.papervision3d.view.BasicView;
 
   public class Cubes extends BasicView {
-    private var cube:Cube;
+    private var cubes:Array = [];
     private var mouseDownX:Number = 0;
     private var targetRotation:Number = 0;
+    private var tween:TweenMax;
+    private var cubeIndex:int = -1;
+    private var cube:Cube;
+    private static const CUBE_COUNT:int = 10;
 
     public function Cubes():void {
       opaqueBackground = 0x000000;
       camera.focus = 100;
       camera.zoom = 10;
 
+      for (var i:int = 0; i < CUBE_COUNT; i++) {
+        cubes[i] = createCube();
+        cubes[i].x = i * 150 - ((CUBE_COUNT - 1) * 150) / 2;
+        scene.addChild(cubes[i]);
+      }
+
+      cube = cubes[0];
+
+      startRendering();
+    }
+
+    private function createCube():Cube {
       var materialsList:MaterialsList = new MaterialsList()
       materialsList.addMaterial(new ColorMaterial(0x00ffff), "front");
       materialsList.addMaterial(new ColorMaterial(0xff00ff), "back");
@@ -27,32 +43,25 @@ package com.ryanberdeen.nest {
       materialsList.addMaterial(new ColorMaterial(0xff0000), "right");
       materialsList.addMaterial(new ColorMaterial(0x00ff00), "top");
       materialsList.addMaterial(new ColorMaterial(0x0000ff), "bottom");
-      cube = new Cube(materialsList, 500, 500, 500);
+      var cube:Cube = new Cube(materialsList, 50, 50, 50);
       cube.z = 450;
-      scene.addChild(cube);
-
-      startRendering();
-
-      addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
-      addEventListener(MouseEvent.MOUSE_UP, mouseUpHandler);
-
-      //TweenMax.to(cube, 200, {rotationZ:40000, rotationY:90000, z:450, bezierThrough:[{z:700}], ease:Quad.easeInOut});
-      TweenMax.to(cube, 1, {rotationX:180, y: 200, yoyo: 0, ease:Quad.easeInOut});
+      cube.rotationX = 10;
+      //cube.rotationY = 10;
+      return cube;
     }
 
-    private function mouseDownHandler(event:MouseEvent):void {
-      mouseDownX = event.localX;
+    public function barTriggerHandler():void {
+      cubeIndex++;
+      cube = cubes[cubeIndex % cubes.length];
+      tween = TweenMax.to(cube, .1, {rotationY: '+45', ease:Quad.easeInOut});
     }
 
-    private function mouseUpHandler(event:MouseEvent):void {
-      var currentMouseX:Number = event.localX;
-      if (currentMouseX < mouseDownX) {
-        targetRotation += 900;
-      }
-      else {
-        targetRotation -= 900;
-      }
-      TweenMax.to(cube, 2, {rotationY:targetRotation, z:450, bezierThrough:[{z:700}], ease:Quad.easeInOut});
+    public function beatTriggerHandler():void {
+      tween = TweenMax.to(cube, .1, {y: 0, bezierThrough: [{y: 50}], ease:Quad.easeInOut});
+    }
+
+    public function tatumTriggerHandler():void {
+      tween = TweenMax.to(cube, .1, {rotationX: '+45', ease:Quad.easeInOut});
     }
   }
 }
