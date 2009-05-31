@@ -7,19 +7,37 @@ package com.ryanberdeen.nest {
   import flash.net.URLRequest;
 
   public class NestPlayer extends Sprite {
-    private var nestVis:NestVis;
+    private var barStatus:QuantumStatus;
+    private var beatStatus:QuantumStatus;
+    private var segmentStatus:QuantumStatus;
+    private var tatumStatus:QuantumStatus;
+
     private var sound:Sound;
     private var soundChannel:SoundChannel;
     private var soundChannelPosition:Number = 0;
     private var playing:Boolean;
     private var audioUrl:String;
 
-    public function NestPlayer(data:Object, audioUrl:String, displayWidth:Number):void {
+    public function NestPlayer(data:Object, audioUrl:String, displayWidth:Number, options = null):void {
       this.audioUrl = audioUrl;
 
-      nestVis = new NestVis(data, displayWidth);
-      addChild(nestVis);
-      
+      options ||= {};
+
+      if (options.bars) {
+        barStatus = new QuantumStatus(data.bars, options.bars);
+      }
+      if (options.beats) {
+        beatStatus = new QuantumStatus(data.beats, options.beats);
+      }
+
+      if (options.tatums) {
+        tatumStatus = new QuantumStatus(data.tatums, options.tatums);
+      }
+
+      if (options.segments) {
+        segmentStatus = new QuantumStatus(data.segments, options.segments);
+      }
+
       addEventListener(MouseEvent.CLICK, mouseClickHandler);
       start();
     }
@@ -47,7 +65,18 @@ package com.ryanberdeen.nest {
     }
 
     private function enterFrameHandler(e:Event):void {
-      nestVis.position = soundChannel.position;
+      if (barStatus) {
+        barStatus.position = soundChannel.position;
+      }
+      if (beatStatus) {
+        beatStatus.position = soundChannel.position;
+      }
+      if (tatumStatus) {
+        tatumStatus.position = soundChannel.position;
+      }
+      if (segmentStatus) {
+        segmentStatus.position = soundChannel.position;
+      }
     }
 
     private function mouseClickHandler(e:MouseEvent):void {
