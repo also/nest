@@ -41,19 +41,19 @@ package com.ryanberdeen.cubes {
       
       coloredMaterials = new MaterialsList();
       coloredMaterials.addMaterial(new ColorMaterial(0xFC2C79), "front");
-      coloredMaterials.addMaterial(new ColorMaterial(0x81DDC5), "back");
+      coloredMaterials.addMaterial(new ColorMaterial(0xFC2C79), "back");
       coloredMaterials.addMaterial(new ColorMaterial(0xF7FA84), "left");
-      coloredMaterials.addMaterial(new ColorMaterial(0xE0286B ), "right");
-      coloredMaterials.addMaterial(new ColorMaterial(0xFC2C79), "top");
-      coloredMaterials.addMaterial(new ColorMaterial(0x8B4D6F ), "bottom");
+      coloredMaterials.addMaterial(new ColorMaterial(0xE0286B), "right");
+      coloredMaterials.addMaterial(new ColorMaterial(0x81DDC5), "top");
+      coloredMaterials.addMaterial(new ColorMaterial(0x8B4D6F), "bottom");
       
       whiteMaterials = new MaterialsList();
       whiteMaterials.addMaterial(new ColorMaterial(0xffffff), "front");
       whiteMaterials.addMaterial(new ColorMaterial(0xffffff), "back");
       whiteMaterials.addMaterial(new ColorMaterial(0xffffff), "left");
-      whiteMaterials.addMaterial(new ColorMaterial(0xffffff ), "right");
+      whiteMaterials.addMaterial(new ColorMaterial(0xffffff), "right");
       whiteMaterials.addMaterial(new ColorMaterial(0xffffff), "top");
-      whiteMaterials.addMaterial(new ColorMaterial(0xffffff ), "bottom");
+      whiteMaterials.addMaterial(new ColorMaterial(0xffffff), "bottom");
 
       for (var rowIndex:int = 0; rowIndex < CUBE_ROW_COUNT; rowIndex++) {
         var row:Array = [];

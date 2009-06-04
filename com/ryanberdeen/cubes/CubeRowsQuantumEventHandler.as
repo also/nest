@@ -20,11 +20,18 @@ package com.ryanberdeen.cubes {
       for (var rowIndex:int = 0; rowIndex < Cubes.CUBE_ROW_COUNT; rowIndex++) {
         for (var colIndex:int = 0; colIndex < Cubes.CUBES_PER_ROW; colIndex++) {
           TweenMax.to(cubes[rowIndex][colIndex], .1, {rotationZ: '+180', ease:Quad.easeInOut});
+          TweenMax.to(cubes[rowIndex][colIndex], .1, {y: Math.random() * 1000, ease:Quad.easeInOut});
         }
       }
     }
 
     public function beatTriggerHandler():void {
+      for (var rowIndex:int = 0; rowIndex < Cubes.CUBE_ROW_COUNT; rowIndex++) {
+        for (var colIndex:int = 0; colIndex < Cubes.CUBES_PER_ROW; colIndex++) {
+          TweenMax.to(cubes[rowIndex][colIndex], .2, {scale: 1, bezierThrough: [{scale: 1.5}], ease:Quad.easeInOut});
+          //TweenMax.to(cubes[rowIndex][colIndex], .1, {(tatumIndex % 2 == 0 ? 'rotationX' : 'rotationY'): '+45', ease:Quad.easeInOut});
+        }
+      }
       beatIndex++;
     }
 
@@ -33,7 +40,7 @@ package com.ryanberdeen.cubes {
       for (var rowIndex:int = 0; rowIndex < Cubes.CUBE_ROW_COUNT; rowIndex++) {
         for (var colIndex:int = 0; colIndex < Cubes.CUBES_PER_ROW; colIndex++) {
           TweenMax.to(cubes[rowIndex][colIndex], .1, {(tatumIndex % 2 == 0 ? 'rotationX' : 'rotationY'): '+45', ease:Quad.easeInOut});
-          TweenMax.to(cubes[rowIndex][colIndex], .1, {y: (rowIndex + colIndex + tatumIndex) % 2 == 0 ? '+100' : '-100', ease:Quad.easeInOut});
+          //TweenMax.to(cubes[rowIndex][colIndex], .1, {y: (rowIndex + colIndex + tatumIndex) % 2 == 0 ? '+100' : '-100', ease:Quad.easeInOut});
           cubeIndex++;
         }
       }
