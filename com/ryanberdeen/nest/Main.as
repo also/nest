@@ -1,15 +1,20 @@
 package com.ryanberdeen.nest {
   import com.adobe.serialization.json.JSON;
 
+  import com.ryanberdeen.cubes.Cubes;
+
   import flash.display.Sprite;
   import flash.events.Event;
   import flash.net.URLLoader;
   import flash.net.URLRequest;
+  import flash.utils.Timer;
+  import flash.events.TimerEvent;
 
   public class Main extends Sprite {
     private var loader:URLLoader;
     private var player:NestPlayer;
     private var cubes:Cubes;
+    private var timer:Timer;
 
     public function Main():void {
       loader = new URLLoader();
@@ -20,29 +25,34 @@ package com.ryanberdeen.nest {
 
       cubes = new Cubes();
       addChild(cubes);
-    }
 
-    private function nestDataCompleteHandler(e:Event):void {
-      var result:Object = JSON.decode(loader.data);
-      addNestVis(result);
-    }
-
-    private function addNestVis(data:Object):void {
-      player = new NestPlayer(data, 'http://static.ryanberdeen.com/projects/nest/lo.mp3', stage.stageWidth, {
+      player = new NestPlayer('http://static.ryanberdeen.com/projects/nest/lo.mp3', {
         bars: {
           triggerStartHandler: cubes.barTriggerHandler,
           triggerStartOffset: -50
         },
         beats: {
           triggerStartHandler: cubes.beatTriggerHandler,
-          triggerStartOffset: -50
+          triggerStartOffset: -100
         },
         tatums: {
           triggerStartHandler: cubes.tatumTriggerHandler,
           triggerStartOffset: -50
         }
       });
-      addChild(player);
+    }
+
+    private function nestDataCompleteHandler(e:Event):void {
+      var data:Object = JSON.decode(loader.data);
+      player.data = data;
+
+      timer = new Timer(5000, 1);
+      timer.addEventListener('timer', timerHandler);
+      timer.start();
+    }
+
+    private function timerHandler(e:TimerEvent) {
+      player.start();
     }
   }
 }

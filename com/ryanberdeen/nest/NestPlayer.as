@@ -1,7 +1,6 @@
 package com.ryanberdeen.nest {
   import flash.display.Sprite;
   import flash.events.Event;
-  import flash.events.MouseEvent;
   import flash.media.Sound;
   import flash.media.SoundChannel;
   import flash.net.URLRequest;
@@ -11,6 +10,7 @@ package com.ryanberdeen.nest {
     private var beatStatus:QuantumStatus;
     private var segmentStatus:QuantumStatus;
     private var tatumStatus:QuantumStatus;
+    private var options:Object;
 
     private var sound:Sound;
     private var soundChannel:SoundChannel;
@@ -18,11 +18,15 @@ package com.ryanberdeen.nest {
     private var playing:Boolean;
     private var audioUrl:String;
 
-    public function NestPlayer(data:Object, audioUrl:String, displayWidth:Number, options = null):void {
+    public function NestPlayer(audioUrl:String, options = null):void {
+      sound = new Sound();
+      sound.load(new URLRequest(audioUrl));
       this.audioUrl = audioUrl;
 
-      options ||= {};
+      this.options = options || {};
+    }
 
+    public function set data(data:Object):void {
       if (options.bars) {
         barStatus = new QuantumStatus(data.bars, options.bars);
       }
@@ -37,19 +41,16 @@ package com.ryanberdeen.nest {
       if (options.segments) {
         segmentStatus = new QuantumStatus(data.segments, options.segments);
       }
-
-      addEventListener(MouseEvent.CLICK, mouseClickHandler);
-      start();
     }
 
-    private function start():void {
-      sound = new Sound();
-      sound.load(new URLRequest(audioUrl));
+    public function start():void {
       play();
       addEventListener(Event.ENTER_FRAME, enterFrameHandler);
     }
 
     private function stop():void {
+      pause();
+      soundChannelPosition = 0;
       removeEventListener(Event.ENTER_FRAME, enterFrameHandler);
     }
 
@@ -78,10 +79,5 @@ package com.ryanberdeen.nest {
         segmentStatus.position = soundChannel.position;
       }
     }
-
-    private function mouseClickHandler(e:MouseEvent):void {
-      playing ? pause() : play();
-    }
-
   }
 }
