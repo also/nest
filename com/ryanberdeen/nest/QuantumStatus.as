@@ -28,7 +28,7 @@ package com.ryanberdeen.nest {
         }
       }
 
-      if (p >= nextPosition + triggerStartOffset) {
+      if (nextPosition != -1 && p >= nextPosition + triggerStartOffset) {
         currentPosition = nextPosition;
         if (triggerStartHandler != null) {
           triggerStartHandler();
@@ -40,6 +40,9 @@ package com.ryanberdeen.nest {
     private function loadNextPosition():void {
       if (nextIndex < quantums.length) {
         nextPosition = quantums[nextIndex++].start * 1000;
+      }
+      else {
+        nextPosition = -1;
       }
     }
   }
