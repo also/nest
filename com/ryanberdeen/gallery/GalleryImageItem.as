@@ -22,21 +22,23 @@ package com.ryanberdeen.gallery {
     }
 
     private function completeHandler(e:Event):void {
-      trace('loaded');
-      var bitmap:Bitmap = Bitmap(loader.content);
-      var width:Number;
-      var height:Number;
-      var scale:Number = Gallery.ITEM_MAX_DIMENSION / Math.max(bitmap.width, bitmap.height);
-      sprite = new Plane(new BitmapMaterial(bitmap.bitmapData, true), bitmap.width * scale, bitmap.height * scale);
       ready();
     }
 
     private function ioErrorHandler(event:IOErrorEvent):void {
-      trace("ioErrorHandler: " + event);
+      //trace("ioErrorHandler: " + event);
     }
 
     private function progressHandler(event:ProgressEvent):void {
-      trace("progressHandler: bytesLoaded=" + event.bytesLoaded + " bytesTotal=" + event.bytesTotal);
+      //trace("progressHandler: bytesLoaded=" + event.bytesLoaded + " bytesTotal=" + event.bytesTotal);
+    }
+
+    override public function prepare():void {
+      var bitmap:Bitmap = Bitmap(loader.content);
+      var width:Number;
+      var height:Number;
+      var scale:Number = Math.min(1, Gallery.ITEM_MAX_DIMENSION / Math.max(bitmap.width, bitmap.height));
+      sprite = new Plane(new BitmapMaterial(bitmap.bitmapData, true), bitmap.width * scale, bitmap.height * scale);
     }
 
     override public function cancel():void {

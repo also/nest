@@ -13,6 +13,8 @@ package com.ryanberdeen.gallery {
       gallery.itemReady(this);
     }
 
+    public function prepare():void {}
+
     public function cancel():void {
 
     }
