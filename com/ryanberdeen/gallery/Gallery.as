@@ -31,8 +31,8 @@ package com.ryanberdeen.gallery {
     private var currentRow:int = -1;
     private var showingItem:Boolean = false;
     private var droppingItemCount:int = 0;
-    private var selectedRow:int = -1;
-    private var selectedCol:int = -1;
+    private var selectedRow:int = 0;
+    private var selectedCol:int = 0;
 
     public function Gallery():void {
       Main.connector.subscribe('gallery', this);
@@ -41,10 +41,6 @@ package com.ryanberdeen.gallery {
       camera.zoom = 10;
       camera.y = ROW_CAMERA_Y;
       camera.z = -20000;
-
-      for (var i:int = 2; i < 39; i++) {
-        addImageItem('http://static.ryanberdeen.com/projects/uooneshow/snapshots/' + i +'.png')
-      }
 
       startRendering();
     }
@@ -148,7 +144,12 @@ package com.ryanberdeen.gallery {
     }
 
     public function highlightSelected():void {
-      showPosition(selectedRow, selectedCol);
+      if (showingItem) {
+        showPosition(selectedRow, selectedCol);
+      }
+      else {
+        showRow(selectedRow);
+      }
     }
 
     private function startRandom():void {
@@ -172,7 +173,6 @@ package com.ryanberdeen.gallery {
 
     public function handle_add_image(url:String):void {
       stopRandom();
-      trace('add image message: ' + url);
       addImageItem(url);
     }
 
@@ -209,7 +209,14 @@ package com.ryanberdeen.gallery {
     }
 
     public function handle_enter(m:String):void {
-
+      stopRandom();
+      if (showingItem) {
+        showRow();
+      }
+      else {
+        showingItem = true;
+        highlightSelected();
+      }
     }
 
     public function row(index:int):int {
