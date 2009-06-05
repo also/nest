@@ -2,6 +2,8 @@ package com.ryanberdeen.camera {
   import com.adobe.images.PNGEncoder;
   import com.adobe.serialization.json.JSON;
 
+  import com.ryanberdeen.connector.Connector;
+
   import flash.display.BitmapData;
   import flash.display.Graphics;
   import flash.display.Sprite;
@@ -23,6 +25,9 @@ package com.ryanberdeen.camera {
   import flash.utils.ByteArray;
 
   public class Main extends Sprite {
+    public static var connector:Connector;
+    public static var options:Object;
+    public static var baseUrl:String;
     private var camera:Camera;
     private var video:Video;
     private var snapshotGraphics:Graphics;
@@ -32,7 +37,13 @@ package com.ryanberdeen.camera {
     private var snapshotUrl:String;
 
     public function Main() {
+      options = root.loaderInfo.parameters;
       snapshotUrl = root.loaderInfo.parameters.snapshotUrl;
+      Main.baseUrl = options.baseUrl || 'http://ryan-berdeens-macbook-pro.local:3000/';
+      connector = new Connector();
+      connector.connect(options.connectorHost || 'ryan-berdeens-macbook-pro.local', options.connectorPort || 1843);
+      connector.subscribe('camera', this);
+
       camera = Camera.getCamera();
       camera.setMode(640, 480, 29);
       video = new Video(640, 480);
@@ -165,6 +176,10 @@ package com.ryanberdeen.camera {
 
     private function snapshotPosted(snapshot:Object):void {
       ExternalInterface.call('snapshotPosted', snapshot);
+    }
+
+    public function handle_take_snapshot(m:String):void {
+      takeSnapshot();
     }
   }
 }

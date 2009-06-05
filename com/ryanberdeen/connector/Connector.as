@@ -44,7 +44,6 @@ package com.ryanberdeen.connector {
       for (var path:String in subscribers) {
         send('server subscribe ' + path);
       }
-      subscribe('connector', this);
       onEvent(event);
     }
 
