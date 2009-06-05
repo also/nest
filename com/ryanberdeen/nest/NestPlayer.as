@@ -1,8 +1,11 @@
 package com.ryanberdeen.nest {
+  import gs.TweenMax;
+
   import flash.display.Sprite;
   import flash.events.Event;
   import flash.media.Sound;
   import flash.media.SoundChannel;
+  import flash.media.SoundTransform;
   import flash.net.URLRequest;
 
   public class NestPlayer extends Sprite {
@@ -54,6 +57,10 @@ package com.ryanberdeen.nest {
       removeEventListener(Event.ENTER_FRAME, enterFrameHandler);
     }
 
+    public function fadeOut():void {
+      TweenMax.to(soundChannel, 3, {volume: 0, onComplete: pause});
+    }
+
     private function play():void {
       soundChannel = sound.play(soundChannelPosition);
       soundChannel.addEventListener(Event.SOUND_COMPLETE, soundCompleteHandler);
@@ -64,6 +71,9 @@ package com.ryanberdeen.nest {
       soundChannelPosition = soundChannel.position;
       soundChannel.stop();
       playing = false;
+      if (options.pauseHandler != null) {
+        options.pauseHandler();
+      }
     }
 
     private function soundCompleteHandler(e:Event):void {

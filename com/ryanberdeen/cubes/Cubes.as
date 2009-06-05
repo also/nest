@@ -72,8 +72,6 @@ package com.ryanberdeen.cubes {
 
       qeh = new CubeRowsQuantumEventHandler(this);
 
-      cube = cubes[0][0];
-
       startRendering();
 
       TweenMax.to(camera, 10, {y: 2000, z: -1000, yoyo: 0});
@@ -100,6 +98,10 @@ package com.ryanberdeen.cubes {
 
     public function stop():void {
       raiseCubes();
+    }
+
+    public function pause():void {
+      dropCubes();
     }
 
     private function createCube(materials:MaterialsList):Cube {

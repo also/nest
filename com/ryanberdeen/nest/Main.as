@@ -5,6 +5,7 @@ package com.ryanberdeen.nest {
 
   import flash.display.Sprite;
   import flash.events.Event;
+  import flash.events.MouseEvent;
   import flash.net.URLLoader;
   import flash.net.URLRequest;
   import flash.utils.Timer;
@@ -39,7 +40,8 @@ package com.ryanberdeen.nest {
           triggerStartHandler: cubes.tatumTriggerHandler,
           triggerStartOffset: -50
         },
-        soundCompleteHandler: cubes.stop
+        soundCompleteHandler: cubes.stop,
+        pauseHandler: cubes.pause
       });
     }
 
@@ -48,11 +50,11 @@ package com.ryanberdeen.nest {
       player.data = data;
 
       timer = new Timer(5000, 1);
-      timer.addEventListener('timer', timerHandler);
+      timer.addEventListener('timer', startTimerHandler);
       timer.start();
     }
 
-    private function timerHandler(e:TimerEvent) {
+    private function startTimerHandler(e:TimerEvent):void {
       player.start();
     }
   }
