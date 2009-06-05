@@ -56,6 +56,7 @@ package com.ryanberdeen.nest {
 
     private function play():void {
       soundChannel = sound.play(soundChannelPosition);
+      soundChannel.addEventListener(Event.SOUND_COMPLETE, soundCompleteHandler);
       playing = true;
     }
 
@@ -63,6 +64,12 @@ package com.ryanberdeen.nest {
       soundChannelPosition = soundChannel.position;
       soundChannel.stop();
       playing = false;
+    }
+
+    private function soundCompleteHandler(e:Event):void {
+      if (options.soundCompleteHandler != null) {
+        options.soundCompleteHandler();
+      }
     }
 
     private function enterFrameHandler(e:Event):void {

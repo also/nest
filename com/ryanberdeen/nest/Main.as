@@ -38,7 +38,8 @@ package com.ryanberdeen.nest {
         tatums: {
           triggerStartHandler: cubes.tatumTriggerHandler,
           triggerStartOffset: -50
-        }
+        },
+        soundCompleteHandler: cubes.stop
       });
     }
 

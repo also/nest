@@ -16,13 +16,15 @@ package com.ryanberdeen.cubes {
     public static const CUBES_PER_ROW:int = 15;
     public static const CUBE_ROW_COUNT:int = 15;
 
+    public static const CUBE_START_Y:int = 2000;
+
     var cubes:Array = [];
     private var qeh:QuantumEventHandler;
     private var tween:TweenMax;
     private var colIndex:int = -1;
     private var rowIndex:int = 0;
     private var cube:Cube;
-    
+
     private var coloredMaterials:MaterialsList;
     private var whiteMaterials:MaterialsList;
 
@@ -32,13 +34,13 @@ package com.ryanberdeen.cubes {
       camera.zoom = 10;
       camera.y = -1000;
       camera.x = -2000;
-      
+
       var plane:Plane = new Plane(new ColorMaterial(0xffffff), 1000, 1000);
       plane.x = 0;
       plane.y = -200;
       plane.rotationX = 90;
       //scene.addChild(plane);
-      
+
       coloredMaterials = new MaterialsList();
       coloredMaterials.addMaterial(new ColorMaterial(0xFC2C79), "front");
       coloredMaterials.addMaterial(new ColorMaterial(0xFC2C79), "back");
@@ -46,7 +48,7 @@ package com.ryanberdeen.cubes {
       coloredMaterials.addMaterial(new ColorMaterial(0xE0286B), "right");
       coloredMaterials.addMaterial(new ColorMaterial(0x81DDC5), "top");
       coloredMaterials.addMaterial(new ColorMaterial(0x8B4D6F), "bottom");
-      
+
       whiteMaterials = new MaterialsList();
       whiteMaterials.addMaterial(new ColorMaterial(0xffffff), "front");
       whiteMaterials.addMaterial(new ColorMaterial(0xffffff), "back");
@@ -63,11 +65,11 @@ package com.ryanberdeen.cubes {
           row[i] = createCube(coloredMaterials);
           row[i].x = i * 150 - ((CUBES_PER_ROW - 1) * 150) / 2;
           row[i].z = cubeZ;
-          row[i].y = 2000;
+          row[i].y = CUBE_START_Y;
           scene.addChild(row[i]);
         }
       }
-      
+
       qeh = new CubeRowsQuantumEventHandler(this);
 
       cube = cubes[0][0];
@@ -76,16 +78,28 @@ package com.ryanberdeen.cubes {
 
       TweenMax.to(camera, 10, {y: 2000, z: -1000, yoyo: 0});
       TweenMax.to(camera, 20, {x: 1000, yoyo: 0});
-      
+
       dropCubes();
     }
-    
+
     private function dropCubes():void {
       for (var rowIndex:int = 0; rowIndex < Cubes.CUBE_ROW_COUNT; rowIndex++) {
         for (var colIndex:int = 0; colIndex < Cubes.CUBES_PER_ROW; colIndex++) {
           TweenMax.to(cubes[rowIndex][colIndex], 1 + Math.random() * 2, {y: 0, ease:Quad.easeInOut});
         }
       }
+    }
+
+    private function raiseCubes():void {
+      for (var rowIndex:int = 0; rowIndex < Cubes.CUBE_ROW_COUNT; rowIndex++) {
+        for (var colIndex:int = 0; colIndex < Cubes.CUBES_PER_ROW; colIndex++) {
+          TweenMax.to(cubes[rowIndex][colIndex], 1 + Math.random() * 2, {y: CUBE_START_Y, ease:Quad.easeInOut});
+        }
+      }
+    }
+
+    public function stop():void {
+      raiseCubes();
     }
 
     private function createCube(materials:MaterialsList):Cube {
@@ -105,7 +119,7 @@ package com.ryanberdeen.cubes {
     public function tatumTriggerHandler():void {
       qeh.tatumTriggerHandler();
     }
-    
+
     private function replaceCube(rowIndex:int, colIndex:int, materials:MaterialsList):Cube {
       var cube:Cube = cubes[rowIndex][colIndex];
       var newCube = createCube(materials);
