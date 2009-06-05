@@ -31,6 +31,8 @@ package com.ryanberdeen.gallery {
     private var currentRow:int = -1;
     private var showingItem:Boolean = false;
     private var droppingItemCount:int = 0;
+    private var selectedRow:int = -1;
+    private var selectedCol:int = -1;
 
     public function Gallery():void {
       Main.connector.subscribe('gallery', this);
@@ -98,6 +100,10 @@ package com.ryanberdeen.gallery {
     }
 
     public function timerHandler(e:Event):void {
+      showRandom();
+    }
+
+    private function showRandom():void {
       if (droppingItemCount > 0) {
         return;
       }
@@ -141,10 +147,15 @@ package com.ryanberdeen.gallery {
       TweenMax.to(camera.target, time, {x: colX, y: 0, z: rowZ, ease:Quad.easeInOut});
     }
 
+    public function highlightSelected():void {
+      showPosition(selectedRow, selectedCol);
+    }
+
     private function startRandom():void {
       if (timer != null) {
         return;
       }
+      showRandom();
       timer = new Timer(5000);
       timer.addEventListener('timer', timerHandler);
       timer.start();
@@ -171,6 +182,34 @@ package com.ryanberdeen.gallery {
 
     public function handle_stop_random(m:String):void {
       stopRandom();
+    }
+
+    public function handle_up(m:String):void {
+      stopRandom();
+      selectedRow--;
+      highlightSelected();
+    }
+
+    public function handle_down(m:String):void {
+      stopRandom();
+      selectedRow++;
+      highlightSelected();
+    }
+
+    public function handle_left(m:String):void {
+      stopRandom();
+      selectedCol--;
+      highlightSelected();
+    }
+
+    public function handle_right(m:String):void {
+      stopRandom();
+      selectedCol++;
+      highlightSelected();
+    }
+
+    public function handle_enter(m:String):void {
+
     }
 
     public function row(index:int):int {
