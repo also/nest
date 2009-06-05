@@ -1,4 +1,5 @@
 package com.ryanberdeen.gallery {
+  import com.ryanberdeen.nest.Main;
   import flash.events.Event;
   import flash.utils.Timer;
 
@@ -32,25 +33,18 @@ package com.ryanberdeen.gallery {
     private var droppingItemCount:int = 0;
 
     public function Gallery():void {
+      Main.connector.subscribe('gallery', this);
       opaqueBackground = 0xeeeeee;
       camera.focus = 100;
       camera.zoom = 10;
       camera.y = ROW_CAMERA_Y;
       camera.z = -20000;
 
-      addImageItem('http://farm4.static.flickr.com/3337/3593699793_78c2c1904c_b_d.jpg');
-      addImageItem('http://farm4.static.flickr.com/3380/3584629030_e1e94a344e_b_d.jpg');
-      addImageItem('http://farm4.static.flickr.com/3608/3584627844_d841d60270_b_d.jpg');
-
       for (var i:int = 2; i < 39; i++) {
         addImageItem('http://static.ryanberdeen.com/projects/uooneshow/snapshots/' + i +'.png')
       }
 
       startRendering();
-
-      timer = new Timer(5000);
-      timer.addEventListener('timer', timerHandler);
-      timer.start();
     }
 
     private function addItem():void {
@@ -145,6 +139,38 @@ package com.ryanberdeen.gallery {
       var cameraZ = rowZ - ITEM_CAMERA_Z_DIST;
       TweenMax.to(camera, time, {x: colX, y: 0, z: cameraZ, ease:Quad.easeInOut});
       TweenMax.to(camera.target, time, {x: colX, y: 0, z: rowZ, ease:Quad.easeInOut});
+    }
+
+    private function startRandom():void {
+      if (timer != null) {
+        return;
+      }
+      timer = new Timer(5000);
+      timer.addEventListener('timer', timerHandler);
+      timer.start();
+    }
+
+    private function stopRandom():void {
+      if (timer == null) {
+        return;
+      }
+      timer.stop();
+      timer = null;
+      showRow();
+    }
+
+    public function handle_add_image(url:String):void {
+      stopRandom();
+      trace('add image message: ' + url);
+      addImageItem(url);
+    }
+
+    public function handle_start_random(m:String):void {
+      startRandom();
+    }
+
+    public function handle_stop_random(m:String):void {
+      stopRandom();
     }
 
     public function row(index:int):int {
