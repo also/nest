@@ -21,13 +21,17 @@ package com.ryanberdeen.nest {
       loader = new URLLoader();
       loader.addEventListener(Event.COMPLETE, nestDataCompleteHandler);
 
-      var request:URLRequest = new URLRequest('http://static.ryanberdeen.com/projects/nest/lo.json');
-      loader.load(request);
-
       cubes = new Cubes();
       addChild(cubes);
 
-      player = new NestPlayer('http://static.ryanberdeen.com/projects/nest/lo.mp3', {
+      play('http://static.ryanberdeen.com/projects/nest/lo');
+    }
+
+    private function play(url:String):void {
+      var request:URLRequest = new URLRequest(url + '.json');
+      loader.load(request);
+
+      player = new NestPlayer(url + '.mp3', {
         bars: {
           triggerStartHandler: cubes.barTriggerHandler,
           triggerStartOffset: -50
@@ -40,8 +44,8 @@ package com.ryanberdeen.nest {
           triggerStartHandler: cubes.tatumTriggerHandler,
           triggerStartOffset: -50
         },
-        soundCompleteHandler: cubes.stop,
-        pauseHandler: cubes.pause
+        soundCompleteHandler: soundCompleteHandler,
+        pauseHandler: pauseHandler
       });
     }
 
@@ -56,6 +60,19 @@ package com.ryanberdeen.nest {
 
     private function startTimerHandler(e:TimerEvent):void {
       player.start();
+    }
+
+    private function advance():void {
+      player.fadeOut();
+    }
+
+    private function soundCompleteHandler():void {
+      cubes.stop();
+    }
+
+    private function pauseHandler():void {
+      cubes.pause();
+      play('http://static.ryanberdeen.com/projects/nest/pp');
     }
   }
 }
