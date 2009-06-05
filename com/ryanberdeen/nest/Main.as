@@ -1,6 +1,7 @@
 package com.ryanberdeen.nest {
   import com.adobe.serialization.json.JSON;
 
+  import com.ryanberdeen.connector.Connector;
   import com.ryanberdeen.cubes.Cubes;
 
   import flash.display.Sprite;
@@ -12,12 +13,21 @@ package com.ryanberdeen.nest {
   import flash.events.TimerEvent;
 
   public class Main extends Sprite {
+    public static var connector:Connector;
+    public static var options:Object;
+    public static var baseUrl:String;
     private var loader:URLLoader;
     private var player:NestPlayer;
     private var cubes:Cubes;
     private var timer:Timer;
 
     public function Main():void {
+      options = root.loaderInfo.parameters;
+      Main.baseUrl = options.baseUrl || 'http://ryan-berdeens-macbook-pro.local:3000/';
+
+      connector = new Connector();
+      connector.connect(options.connectorHost || 'ryan-berdeens-macbook-pro.local', options.connectorPort || 1843);
+
       loader = new URLLoader();
       loader.addEventListener(Event.COMPLETE, nestDataCompleteHandler);
 
