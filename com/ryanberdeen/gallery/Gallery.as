@@ -1,5 +1,6 @@
 package com.ryanberdeen.gallery {
-  import com.ryanberdeen.nest.Main;
+  import com.ryanberdeen.gallery.Main;
+
   import flash.events.Event;
   import flash.utils.Timer;
 
@@ -84,7 +85,19 @@ package com.ryanberdeen.gallery {
         scene.addChild(sprite);
         items[items.length] = item;
         droppingItemCount++;
-        TweenMax.to(sprite, 1, {y: 0, ease: Quad.easeInOut, onComplete: itemDropCompleteHandler});
+        TweenMax.to(sprite, .5, {y: 0, ease: Quad.easeInOut, onComplete: itemDropCompleteHandler});
+      }
+    }
+
+    private function hideAll():void {
+      for each (var item:GalleryItem in items) {
+        TweenMax.to(item.sprite, Math.random() * 3 + 1, {y: ITEM_START_Y, ease: Quad.easeInOut, onComplete: itemDropCompleteHandler});
+      }
+    }
+
+    private function showAll():void {
+      for each (var item:GalleryItem in items) {
+        TweenMax.to(item.sprite, Math.random() * 3 + 1, {y: 0, ease: Quad.easeInOut, onComplete: itemDropCompleteHandler});
       }
     }
 
@@ -217,6 +230,26 @@ package com.ryanberdeen.gallery {
         showingItem = true;
         highlightSelected();
       }
+    }
+
+    public function handle_show_all(m:String):void {
+      stopRandom();
+      showAll();
+    }
+
+    public function handle_hide_all(m:String):void {
+      stopRandom();
+      hideAll();
+    }
+
+    public function handle_show_front(m:String):void {
+      stopRandom();
+      showRow(items.length / ITEMS_PER_ROW);
+    }
+
+    public function handle_show_back(m:String):void {
+      stopRandom();
+      showRow(0);
     }
 
     public function row(index:int):int {
