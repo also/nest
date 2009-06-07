@@ -25,6 +25,7 @@ package com.ryanberdeen.gallery {
     public static const ROW_CAMERA_Y:Number = 3000;
     public static const ITEM_CAMERA_Y:Number = ITEM_MAX_DIMENSION / 2;
     public static const ITEM_CAMERA_Z_DIST:Number = 1000;
+
     private var items:Array = [];
     private var loadingItems = [];
     private var readyItems = [];
@@ -34,6 +35,8 @@ package com.ryanberdeen.gallery {
     private var droppingItemCount:int = 0;
     private var selectedRow:int = 0;
     private var selectedCol:int = 0;
+    private var loadingImageCount:int = 0;
+    private var imageUrls:Array = [];
 
     public function Gallery():void {
       Main.connector.subscribe('gallery', this);
@@ -46,21 +49,23 @@ package com.ryanberdeen.gallery {
       startRendering();
     }
 
-    private function addItem():void {
-      addLoadingItem(new GalleryColorItem(this, COLORS[items.length % COLORS.length]));
-    }
-
     public function addImageItem(url:String):void {
-      addLoadingItem(new GalleryImageItem(this, url));
+      imageUrls.push(url);
+      loadMoreImages();
     }
 
-    private function addLoadingItem(item:GalleryItem):void {
-      loadingItems[loadingItems.length] = item;
+    private function loadMoreImages():void {
+      while (imageUrls.length > 0 && loadingImageCount < 5) {
+        loadingItems[loadingItems.length] = new GalleryImageItem(this, imageUrls.pop());
+        loadingImageCount++;
+      }
     }
 
     function itemReady(item:GalleryItem):void {
       readyItems.push(item);
       dropReadyItems();
+      loadingImageCount--;
+      loadMoreImages();
     }
 
     private function dropReadyItems():void {
