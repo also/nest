@@ -21,7 +21,7 @@ package com.ryanberdeen.nest {
     private var playing:Boolean;
     private var audioUrl:String;
 
-    public function NestPlayer(audioUrl:String, options = null):void {
+    public function NestPlayer(audioUrl:String, options:Object = null):void {
       sound = new Sound();
       sound.load(new URLRequest(audioUrl));
       this.audioUrl = audioUrl;

@@ -1,8 +1,8 @@
 package com.ryanberdeen.nest {
-  class QuantumStatus {
+  public class QuantumStatus {
     private var quantums:Array;
     private var nextIndex:int = 0;
-    private var currentPosition = -1;
+    private var currentPosition:int = -1;
     private var nextPosition:int = -1;
     private var triggerStartOffset:Number;
     private var triggerEndOffset:Number;
@@ -21,7 +21,7 @@ package com.ryanberdeen.nest {
       loadNextPosition();
     }
 
-    public function set position(p:Number) {
+    public function set position(p:Number):void {
       if (currentPosition != -1 && currentPosition + triggerEndOffset <= p) {
         if (triggerEndHandler != null) {
           triggerEndHandler();
@@ -39,7 +39,7 @@ package com.ryanberdeen.nest {
 
     private function loadNextPosition():void {
       if (nextIndex < quantums.length) {
-        nextPosition = quantums[nextIndex++].start * 1000;
+        nextPosition = quantums[nextIndex++][0] * 1000;
       }
       else {
         nextPosition = -1;
