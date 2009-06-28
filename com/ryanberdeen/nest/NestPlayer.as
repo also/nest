@@ -14,22 +14,23 @@ package com.ryanberdeen.nest {
     private var segmentStatus:QuantumStatus;
     private var tatumStatus:QuantumStatus;
     private var options:Object;
+    private var _data:Object;
 
-    private var sound:Sound;
+    public var sound:Sound;
     private var soundChannel:SoundChannel;
     private var soundChannelPosition:Number = 0;
     private var playing:Boolean;
-    private var audioUrl:String;
 
-    public function NestPlayer(audioUrl:String, options:Object = null):void {
-      sound = new Sound();
-      sound.load(new URLRequest(audioUrl));
-      this.audioUrl = audioUrl;
-
+    public function NestPlayer(options:Object = null):void {
       this.options = options || {};
     }
 
+    public function get data():Object {
+      return _data;
+    }
+
     public function set data(data:Object):void {
+      _data = data;
       if (options.bars) {
         barStatus = new QuantumStatus(data.bars, options.bars);
       }
