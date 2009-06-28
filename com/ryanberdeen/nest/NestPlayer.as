@@ -14,6 +14,7 @@ package com.ryanberdeen.nest {
     private var segmentStatus:QuantumStatus;
     private var tatumStatus:QuantumStatus;
     private var options:Object;
+    public var positionListener:Object;
     private var _data:Object;
 
     public var sound:Sound;
@@ -44,6 +45,9 @@ package com.ryanberdeen.nest {
 
       if (options.segments) {
         segmentStatus = new QuantumStatus(data.segments, options.segments);
+      }
+      if (options.positionListener) {
+        positionListener = options.positionListener;
       }
     }
 
@@ -95,6 +99,9 @@ package com.ryanberdeen.nest {
       }
       if (segmentStatus) {
         segmentStatus.position = soundChannel.position;
+      }
+      if (positionListener) {
+        positionListener.position = soundChannel.position;
       }
     }
   }
