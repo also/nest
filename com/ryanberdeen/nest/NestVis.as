@@ -24,19 +24,6 @@ package com.ryanberdeen.nest {
       this.data = data;
       this.displayWidth = displayWidth;
       displayHeight = 200;
-      trace('key: ' + data.key);
-      trace('duration: ' + data.duration);
-      trace('tempo: ' + data.tempo);
-      trace('time_signature: ' + data.time_signature);
-      trace('mode: ' + data.mode);
-      trace('loudness: ' + data.loudness);
-      trace('end_of_fade_in: ' + data.end_of_fade_in);
-      trace('start_of_fade_out: ' + data.start_of_fade_out);
-      trace('sections: ' + data.sections.length);
-      trace('bars: ' + data.bars.length);
-      trace('beats: ' + data.beats.length);
-      trace('tatums: ' + data.tatums.length);
-      trace('segments: ' + data.segments.length);
 
       duration = data.duration * 1000;
 

@@ -13,7 +13,7 @@ package com.ryanberdeen.nest {
     private var beatStatus:QuantumStatus;
     private var segmentStatus:QuantumStatus;
     private var tatumStatus:QuantumStatus;
-    private var options:Object;
+    private var _options:Object;
     public var positionListener:Object;
     private var _data:Object;
 
@@ -26,28 +26,32 @@ package com.ryanberdeen.nest {
       this.options = options || {};
     }
 
+    public function set options(options:Object):void {
+      _options = options;
+    }
+
     public function get data():Object {
       return _data;
     }
 
     public function set data(data:Object):void {
       _data = data;
-      if (options.bars) {
-        barStatus = new QuantumStatus(data.bars, options.bars);
+      if (_options.bars) {
+        barStatus = new QuantumStatus(data.bars, _options.bars);
       }
-      if (options.beats) {
-        beatStatus = new QuantumStatus(data.beats, options.beats);
-      }
-
-      if (options.tatums) {
-        tatumStatus = new QuantumStatus(data.tatums, options.tatums);
+      if (_options.beats) {
+        beatStatus = new QuantumStatus(data.beats, _options.beats);
       }
 
-      if (options.segments) {
-        segmentStatus = new QuantumStatus(data.segments, options.segments);
+      if (_options.tatums) {
+        tatumStatus = new QuantumStatus(data.tatums, _options.tatums);
       }
-      if (options.positionListener) {
-        positionListener = options.positionListener;
+
+      if (_options.segments) {
+        segmentStatus = new QuantumStatus(data.segments, _options.segments);
+      }
+      if (_options.positionListener) {
+        positionListener = _options.positionListener;
       }
     }
 
@@ -76,14 +80,14 @@ package com.ryanberdeen.nest {
       soundChannelPosition = soundChannel.position;
       soundChannel.stop();
       playing = false;
-      if (options.pauseHandler != null) {
-        options.pauseHandler();
+      if (_options.pauseHandler != null) {
+        _options.pauseHandler();
       }
     }
 
     private function soundCompleteHandler(e:Event):void {
-      if (options.soundCompleteHandler != null) {
-        options.soundCompleteHandler();
+      if (_options.soundCompleteHandler != null) {
+        _options.soundCompleteHandler();
       }
     }
 
