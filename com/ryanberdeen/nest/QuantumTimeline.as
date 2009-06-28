@@ -21,8 +21,8 @@ package com.ryanberdeen.nest {
       graphics.lineStyle(1, color);
 
       for each (var quantum:Object in quantums) {
-        graphics.moveTo(quantum.start * durationScale, height);
-        graphics.lineTo(quantum.start * durationScale, height + 10);
+        graphics.moveTo(quantum[0] * durationScale, height);
+        graphics.lineTo(quantum[0] * durationScale, height + 10);
       }
     }
   }
