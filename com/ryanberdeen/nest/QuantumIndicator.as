@@ -1,7 +1,7 @@
 package com.ryanberdeen.nest {
   import flash.display.Shape;
 
-  class QuantumIndicator extends Shape {
+  public class QuantumIndicator extends Shape {
     private var status:QuantumStatus;
     public function QuantumIndicator(data:Array, triggerDuration:Number, color:uint):void {
       graphics.beginFill(color);
@@ -24,8 +24,8 @@ package com.ryanberdeen.nest {
       visible = false;
     }
 
-    public function set position(p:Number) {
-      status.position = p;
+    public function set position(position:Number):void {
+      status.position = position;
     }
   }
 }

@@ -2,7 +2,7 @@ package com.ryanberdeen.nest {
   import flash.display.Shape;
   import flash.display.Sprite;
 
-  class ScrollingQuantumTimeline extends Sprite {
+  public class ScrollingQuantumTimeline extends Sprite {
     private var timeline:QuantumTimeline;
     private var durationScale:Number;
     private var displayWidth:Number;
@@ -24,6 +24,7 @@ package com.ryanberdeen.nest {
 
       timeline = new QuantumTimeline(data, durationScale);
       addChild(timeline);
+      position = 0;
     }
 
     public function set position(p:Number):void {

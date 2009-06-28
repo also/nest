@@ -2,7 +2,7 @@ package com.ryanberdeen.nest {
   import flash.display.Sprite;
   import flash.display.Graphics;
 
-  class QuantumTimeline extends Sprite {
+  public class QuantumTimeline extends Sprite {
     private var durationScale:Number;
 
     public function QuantumTimeline(data:Object, durationScale:Number):void {
