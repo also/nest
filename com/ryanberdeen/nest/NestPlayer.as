@@ -8,13 +8,13 @@ package com.ryanberdeen.nest {
   import flash.media.SoundTransform;
   import flash.net.URLRequest;
 
-  public class NestPlayer extends Sprite {
+  public class NestPlayer extends Sprite implements INestPlayer {
     private var barStatus:QuantumStatus;
     private var beatStatus:QuantumStatus;
     private var segmentStatus:QuantumStatus;
     private var tatumStatus:QuantumStatus;
     private var _options:Object;
-    public var positionListener:Object;
+    public var _positionListener:Object;
     private var _data:Object;
 
     public var sound:Sound;
@@ -28,6 +28,10 @@ package com.ryanberdeen.nest {
 
     public function set options(options:Object):void {
       _options = options;
+    }
+
+    public function set positionListener(positionListener:Object):void {
+      _positionListener = positionListener;
     }
 
     public function get data():Object {
@@ -104,8 +108,8 @@ package com.ryanberdeen.nest {
       if (segmentStatus) {
         segmentStatus.position = soundChannel.position;
       }
-      if (positionListener) {
-        positionListener.position = soundChannel.position;
+      if (_positionListener) {
+        _positionListener.position = soundChannel.position;
       }
     }
   }
