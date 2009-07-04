@@ -1,5 +1,8 @@
 package com.ryanberdeen.nest {
-  public class QuantumStatus {
+  import flash.events.Event;
+  import flash.events.EventDispatcher;
+
+  public class QuantumStatus extends EventDispatcher {
     private var _quantums:Array;
     private var nextIndex:int = 0;
     private var currentPosition:int = -1;
@@ -10,11 +13,14 @@ package com.ryanberdeen.nest {
     private var triggerStartHandler:Function;
     private var triggerEndHandler:Function;
 
+    private var hasChangeListener:Boolean = false;
+
     internal function set quantums(quantums:Array):void {
       _quantums = quantums;
     }
 
     internal function set options(options:Object):void {
+      options ||= {};
       this.triggerStartOffset = options.triggerStartOffset || 0;
       this.triggerEndOffset = options.triggerEndOffset || 100;
 
@@ -34,6 +40,11 @@ package com.ryanberdeen.nest {
         if (triggerStartHandler != null) {
           triggerStartHandler();
         }
+
+        // TODO shoudln't be offset
+        if (hasChangeListener) {
+          dispatchEvent(new Event(Event.CHANGE));
+        }
         loadNextPosition();
       }
     }
@@ -48,6 +59,7 @@ package com.ryanberdeen.nest {
 
     internal function prepare():void {
       loadNextPosition();
+       hasChangeListener = hasEventListener(Event.CHANGE);
     }
 
     private function loadNextPosition():void {
