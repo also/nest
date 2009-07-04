@@ -37,25 +37,44 @@ package com.ryanberdeen.nest {
       background.graphics.endFill();
       addChild(background);
 
-      barIndicator = new QuantumIndicator(data.bars, 200, 0x00ffff);
+      barIndicator = new QuantumIndicator(0x00ffff);
       barIndicator.x = 10;
       barIndicator.y = 10;
       addChild(barIndicator);
 
-      beatIndicator = new QuantumIndicator(data.beats, 200, 0xffff00);
+      beatIndicator = new QuantumIndicator(0xffff00);
       beatIndicator.x = 80;
       beatIndicator.y = 10;
       addChild(beatIndicator);
 
-      tatumIndicator = new QuantumIndicator(data.tatums, 50, 0xff00ff);
+      tatumIndicator = new QuantumIndicator(0xff00ff);
       tatumIndicator.x = 150;
       tatumIndicator.y = 10;
       addChild(tatumIndicator);
 
-      segmentIndicator = new QuantumIndicator(data.segments, 50, 0xdddddd);
+      segmentIndicator = new QuantumIndicator(0xdddddd);
       segmentIndicator.x = 220;
       segmentIndicator.y = 10;
       addChild(segmentIndicator);
+
+      nestPlayer.options = {
+        bars: {
+          triggerStartHandler: barIndicator.show,
+          triggerEndHandler: barIndicator.hide
+        },
+        beats: {
+          triggerStartHandler: beatIndicator.show,
+          triggerEndHandler: beatIndicator.hide
+        },
+        tatums: {
+          triggerStartHandler: tatumIndicator.show,
+          triggerEndHandler: tatumIndicator.hide
+        },
+        segments: {
+          triggerStartHandler: segmentIndicator.show,
+          triggerEndHandler: segmentIndicator.hide
+        }
+      };
 
       durationScale = 100;//(displayWidth - 20) / data.duration;
       timeline = new ScrollingQuantumTimeline(data, durationScale, displayWidth);
@@ -64,12 +83,7 @@ package com.ryanberdeen.nest {
     }
 
     private function onChangeHandler(e:Event):void {
-      var p:Number = nestPlayer.position;
-      timeline.position = p;
-      barIndicator.position = p;
-      beatIndicator.position = p;
-      segmentIndicator.position = p;
-      tatumIndicator.position = p;
+      timeline.position = nestPlayer.position;
     }
   }
 }
