@@ -7,7 +7,7 @@ package com.ryanberdeen.nest {
   import flash.net.URLRequest;
 
   public class NestVis extends Sprite {
-    private var data:Object;
+    private var nestPlayer:INestPlayer;
     private var displayWidth:Number;
     private var displayHeight:Number;
     private var duration:Number;
@@ -20,10 +20,14 @@ package com.ryanberdeen.nest {
     private var segmentIndicator:QuantumIndicator;
     private var tatumIndicator:QuantumIndicator;
 
-    public function NestVis(data:Object, displayWidth:Number):void {
-      this.data = data;
+    public function NestVis(nestPlayer:INestPlayer, displayWidth:Number):void {
+      this.nestPlayer = nestPlayer;
       this.displayWidth = displayWidth;
       displayHeight = 200;
+
+      nestPlayer.driver.addEventListener(Event.CHANGE, onChangeHandler);
+
+      var data:Object = nestPlayer.data;
 
       duration = data.duration * 1000;
 
@@ -59,7 +63,8 @@ package com.ryanberdeen.nest {
       addChild(timeline);
     }
 
-    public function set position(p:Number):void {
+    private function onChangeHandler(e:Event):void {
+      var p:Number = nestPlayer.position;
       timeline.position = p;
       barIndicator.position = p;
       beatIndicator.position = p;

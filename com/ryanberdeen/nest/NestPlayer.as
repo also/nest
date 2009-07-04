@@ -1,7 +1,6 @@
 package com.ryanberdeen.nest {
   import flash.events.Event;
   import flash.net.URLRequest;
-  import flash.utils.Timer;
 
   public class NestPlayer implements INestPlayer {
     private var barStatus:QuantumStatus;
@@ -9,15 +8,13 @@ package com.ryanberdeen.nest {
     private var segmentStatus:QuantumStatus;
     private var tatumStatus:QuantumStatus;
     private var _options:Object;
-    public var _positionListener:Object;
     private var _data:Object;
     private var _positionSource:IPositionSource;
-    private var timer:Timer;
+    private var _driver:IDriver;
 
     public function NestPlayer(options:Object = null):void {
       this.options = options || {};
-      timer = new Timer(10);
-      timer.addEventListener('timer', timerEventHandler);
+      driver = new TimerDriver();
     }
 
     public function set options(options:Object):void {
@@ -26,15 +23,24 @@ package com.ryanberdeen.nest {
 
     public function set positionSource(positionSource:IPositionSource):void {
       if (_positionSource != null) {
-        _positionSource.removeEventListener(Event.COMPLETE, completeHandler);
+        // TODO throw exception
       }
 
       _positionSource = positionSource;
-      _positionSource.removeEventListener(Event.COMPLETE, completeHandler);
+      _positionSource.addEventListener(Event.COMPLETE, completeHandler);
     }
 
-    public function set positionListener(positionListener:Object):void {
-      _positionListener = positionListener;
+    public function get driver():IDriver {
+      return _driver;
+    }
+
+    public function set driver(driver:IDriver):void {
+      if (_driver != null) {
+        // TODO throw exception
+      }
+
+      _driver = driver;
+      _driver.addEventListener(Event.CHANGE, driverEventHandler);
     }
 
     public function get data():Object {
@@ -57,19 +63,20 @@ package com.ryanberdeen.nest {
       if (_options.segments) {
         segmentStatus = new QuantumStatus(data.segments, _options.segments);
       }
-      if (_options.positionListener) {
-        positionListener = _options.positionListener;
-      }
+    }
+
+    public function get position():Number {
+      return _positionSource.position;
     }
 
     public function start():void {
       _positionSource.start();
-      timer.start();
+      _driver.start();
     }
 
     private function stop():void {
       _positionSource.stop();
-      timer.stop();
+      _driver.stop();
     }
 
     public function reset():void {
@@ -77,10 +84,10 @@ package com.ryanberdeen.nest {
     }
 
     private function completeHandler(e:Event):void {
-
+      _driver.stop();
     }
 
-    private function timerEventHandler(e:Event):void {
+    private function driverEventHandler(e:Event):void {
       if (barStatus) {
         barStatus.position = _positionSource.position;
       }
@@ -92,9 +99,6 @@ package com.ryanberdeen.nest {
       }
       if (segmentStatus) {
         segmentStatus.position = _positionSource.position;
-      }
-      if (_positionListener) {
-        _positionListener.position = _positionSource.position;
       }
     }
   }
