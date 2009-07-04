@@ -11,13 +11,16 @@ package com.ryanberdeen.nest {
     private var _data:Object;
     private var _positionSource:IPositionSource;
     private var _driver:IDriver;
+    private var prepared:Boolean;
 
     public function NestPlayer(options:Object = null):void {
+      prepared = false;
       this.options = options || {};
       driver = new TimerDriver();
     }
 
     public function set options(options:Object):void {
+      prepared = false;
       _options = options;
     }
 
@@ -48,7 +51,33 @@ package com.ryanberdeen.nest {
     }
 
     public function set data(data:Object):void {
+      prepared = false;
       _data = data;
+    }
+
+    public function get position():Number {
+      return _positionSource.position;
+    }
+
+    public function start():void {
+      if (!prepared) {
+        prepare();
+        prepared = true;
+      }
+      _positionSource.start();
+      _driver.start();
+    }
+
+    private function stop():void {
+      _positionSource.stop();
+      _driver.stop();
+    }
+
+    public function reset():void {
+      _positionSource.reset();
+    }
+
+    private function prepare():void {
       if (_options.bars) {
         barStatus = new QuantumStatus(data.bars, _options.bars);
       }
@@ -65,40 +94,24 @@ package com.ryanberdeen.nest {
       }
     }
 
-    public function get position():Number {
-      return _positionSource.position;
-    }
-
-    public function start():void {
-      _positionSource.start();
-      _driver.start();
-    }
-
-    private function stop():void {
-      _positionSource.stop();
-      _driver.stop();
-    }
-
-    public function reset():void {
-      _positionSource.reset();
-    }
-
     private function completeHandler(e:Event):void {
       _driver.stop();
     }
 
     private function driverEventHandler(e:Event):void {
+      var position:Number = _positionSource.position;
+
       if (barStatus) {
-        barStatus.position = _positionSource.position;
+        barStatus.position = position;
       }
       if (beatStatus) {
-        beatStatus.position = _positionSource.position;
+        beatStatus.position = position;
       }
       if (tatumStatus) {
-        tatumStatus.position = _positionSource.position;
+        tatumStatus.position = position;
       }
       if (segmentStatus) {
-        segmentStatus.position = _positionSource.position;
+        segmentStatus.position = position;
       }
     }
   }
