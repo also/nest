@@ -10,8 +10,9 @@ package com.ryanberdeen.nest {
     private var triggerStartHandler:Function;
     private var triggerEndHandler:Function;
 
-    public function QuantumStatus(quantums:Array, options:Object):void {
+    public function QuantumStatus(quantums:Array, options:Object = null):void {
       this.quantums = quantums;
+      options ||= {};
       this.triggerStartOffset = options.triggerStartOffset || 0;
       this.triggerEndOffset = options.triggerEndOffset || 100;
 
@@ -44,6 +45,14 @@ package com.ryanberdeen.nest {
       else {
         nextPosition = -1;
       }
+    }
+
+    public function get index():int {
+      return nextIndex - 1;
+    }
+
+    public function get quantum():Array {
+      return quantums[index];
     }
   }
 }

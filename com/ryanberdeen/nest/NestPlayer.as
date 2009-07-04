@@ -3,10 +3,10 @@ package com.ryanberdeen.nest {
   import flash.net.URLRequest;
 
   public class NestPlayer implements INestPlayer {
-    private var barStatus:QuantumStatus;
-    private var beatStatus:QuantumStatus;
-    private var segmentStatus:QuantumStatus;
-    private var tatumStatus:QuantumStatus;
+    private var _barStatus:QuantumStatus;
+    private var _beatStatus:QuantumStatus;
+    private var _tatumStatus:QuantumStatus;
+    private var _segmentStatus:QuantumStatus;
     private var _options:Object;
     private var _data:Object;
     private var _positionSource:IPositionSource;
@@ -59,6 +59,22 @@ package com.ryanberdeen.nest {
       return _positionSource.position;
     }
 
+    public function get barStatus():QuantumStatus {
+      return _barStatus;
+    }
+
+    public function get beatStatus():QuantumStatus {
+      return _beatStatus;
+    }
+
+    public function get tatumStatus():QuantumStatus {
+      return _tatumStatus;
+    }
+
+    public function get segmentStatus():QuantumStatus {
+      return _segmentStatus;
+    }
+
     public function start():void {
       if (!prepared) {
         prepare();
@@ -77,21 +93,13 @@ package com.ryanberdeen.nest {
       _positionSource.reset();
     }
 
-    private function prepare():void {
-      if (_options.bars) {
-        barStatus = new QuantumStatus(data.bars, _options.bars);
-      }
-      if (_options.beats) {
-        beatStatus = new QuantumStatus(data.beats, _options.beats);
-      }
+    public function prepare():void {
+      _barStatus = new QuantumStatus(data.bars, _options.bars);
+      _beatStatus = new QuantumStatus(data.beats, _options.beats);
+      _tatumStatus = new QuantumStatus(data.tatums, _options.tatums);
+      _segmentStatus = new QuantumStatus(data.segments, _options.segments);
 
-      if (_options.tatums) {
-        tatumStatus = new QuantumStatus(data.tatums, _options.tatums);
-      }
-
-      if (_options.segments) {
-        segmentStatus = new QuantumStatus(data.segments, _options.segments);
-      }
+      prepared = true;
     }
 
     private function completeHandler(e:Event):void {
@@ -101,18 +109,10 @@ package com.ryanberdeen.nest {
     private function driverEventHandler(e:Event):void {
       var position:Number = _positionSource.position;
 
-      if (barStatus) {
-        barStatus.position = position;
-      }
-      if (beatStatus) {
-        beatStatus.position = position;
-      }
-      if (tatumStatus) {
-        tatumStatus.position = position;
-      }
-      if (segmentStatus) {
-        segmentStatus.position = position;
-      }
+      _barStatus.position = position;
+      _beatStatus.position = position;
+      _tatumStatus.position = position;
+      _segmentStatus.position = position;
     }
   }
 }
