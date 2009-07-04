@@ -1,14 +1,9 @@
 package com.ryanberdeen.nest {
-  import gs.TweenMax;
-
-  import flash.display.Sprite;
   import flash.events.Event;
-  import flash.media.Sound;
-  import flash.media.SoundChannel;
-  import flash.media.SoundTransform;
   import flash.net.URLRequest;
+  import flash.utils.Timer;
 
-  public class NestPlayer extends Sprite implements INestPlayer {
+  public class NestPlayer implements INestPlayer {
     private var barStatus:QuantumStatus;
     private var beatStatus:QuantumStatus;
     private var segmentStatus:QuantumStatus;
@@ -16,18 +11,26 @@ package com.ryanberdeen.nest {
     private var _options:Object;
     public var _positionListener:Object;
     private var _data:Object;
-
-    public var sound:Sound;
-    private var soundChannel:SoundChannel;
-    private var soundChannelPosition:Number = 0;
-    private var playing:Boolean;
+    private var _positionSource:IPositionSource;
+    private var timer:Timer;
 
     public function NestPlayer(options:Object = null):void {
       this.options = options || {};
+      timer = new Timer(10);
+      timer.addEventListener('timer', timerEventHandler);
     }
 
     public function set options(options:Object):void {
       _options = options;
+    }
+
+    public function set positionSource(positionSource:IPositionSource):void {
+      if (_positionSource != null) {
+        _positionSource.removeEventListener(Event.COMPLETE, completeHandler);
+      }
+
+      _positionSource = positionSource;
+      _positionSource.removeEventListener(Event.COMPLETE, completeHandler);
     }
 
     public function set positionListener(positionListener:Object):void {
@@ -60,56 +63,38 @@ package com.ryanberdeen.nest {
     }
 
     public function start():void {
-      play();
-      addEventListener(Event.ENTER_FRAME, enterFrameHandler);
+      _positionSource.start();
+      timer.start();
     }
 
     private function stop():void {
-      pause();
-      soundChannelPosition = 0;
-      removeEventListener(Event.ENTER_FRAME, enterFrameHandler);
+      _positionSource.stop();
+      timer.stop();
     }
 
-    public function fadeOut():void {
-      TweenMax.to(soundChannel, 3, {volume: 0, onComplete: pause});
+    public function reset():void {
+      _positionSource.reset();
     }
 
-    private function play():void {
-      soundChannel = sound.play(soundChannelPosition);
-      soundChannel.addEventListener(Event.SOUND_COMPLETE, soundCompleteHandler);
-      playing = true;
+    private function completeHandler(e:Event):void {
+
     }
 
-    private function pause():void {
-      soundChannelPosition = soundChannel.position;
-      soundChannel.stop();
-      playing = false;
-      if (_options.pauseHandler != null) {
-        _options.pauseHandler();
-      }
-    }
-
-    private function soundCompleteHandler(e:Event):void {
-      if (_options.soundCompleteHandler != null) {
-        _options.soundCompleteHandler();
-      }
-    }
-
-    private function enterFrameHandler(e:Event):void {
+    private function timerEventHandler(e:Event):void {
       if (barStatus) {
-        barStatus.position = soundChannel.position;
+        barStatus.position = _positionSource.position;
       }
       if (beatStatus) {
-        beatStatus.position = soundChannel.position;
+        beatStatus.position = _positionSource.position;
       }
       if (tatumStatus) {
-        tatumStatus.position = soundChannel.position;
+        tatumStatus.position = _positionSource.position;
       }
       if (segmentStatus) {
-        segmentStatus.position = soundChannel.position;
+        segmentStatus.position = _positionSource.position;
       }
       if (_positionListener) {
-        _positionListener.position = soundChannel.position;
+        _positionListener.position = _positionSource.position;
       }
     }
   }
