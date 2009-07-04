@@ -1,6 +1,6 @@
 package com.ryanberdeen.nest {
   public class QuantumStatus {
-    private var quantums:Array;
+    private var _quantums:Array;
     private var nextIndex:int = 0;
     private var currentPosition:int = -1;
     private var nextPosition:int = -1;
@@ -10,19 +10,19 @@ package com.ryanberdeen.nest {
     private var triggerStartHandler:Function;
     private var triggerEndHandler:Function;
 
-    public function QuantumStatus(quantums:Array, options:Object = null):void {
-      this.quantums = quantums;
-      options ||= {};
+    internal function set quantums(quantums:Array):void {
+      _quantums = quantums;
+    }
+
+    internal function set options(options:Object):void {
       this.triggerStartOffset = options.triggerStartOffset || 0;
       this.triggerEndOffset = options.triggerEndOffset || 100;
 
       triggerStartHandler = options.triggerStartHandler;
       triggerEndHandler = options.triggerEndHandler;
-
-      loadNextPosition();
     }
 
-    public function set position(p:Number):void {
+    internal function set position(p:Number):void {
       if (currentPosition != -1 && currentPosition + triggerEndOffset <= p) {
         if (triggerEndHandler != null) {
           triggerEndHandler();
@@ -38,21 +38,25 @@ package com.ryanberdeen.nest {
       }
     }
 
-    private function loadNextPosition():void {
-      if (nextIndex < quantums.length) {
-        nextPosition = quantums[nextIndex++][0] * 1000;
-      }
-      else {
-        nextPosition = -1;
-      }
-    }
-
     public function get index():int {
       return nextIndex - 1;
     }
 
     public function get quantum():Array {
-      return quantums[index];
+      return _quantums[index];
+    }
+
+    internal function prepare():void {
+      loadNextPosition();
+    }
+
+    private function loadNextPosition():void {
+      if (nextIndex < _quantums.length) {
+        nextPosition = _quantums[nextIndex++][0] * 1000;
+      }
+      else {
+        nextPosition = -1;
+      }
     }
   }
 }

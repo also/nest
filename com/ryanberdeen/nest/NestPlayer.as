@@ -13,15 +13,24 @@ package com.ryanberdeen.nest {
     private var _driver:IDriver;
     private var prepared:Boolean;
 
-    public function NestPlayer(options:Object = null):void {
+    public function NestPlayer():void {
       prepared = false;
-      this.options = options || {};
       driver = new TimerDriver();
+
+      _barStatus = new QuantumStatus();
+      _beatStatus = new QuantumStatus();
+      _tatumStatus = new QuantumStatus();
+      _segmentStatus = new QuantumStatus();
     }
 
     public function set options(options:Object):void {
       prepared = false;
       _options = options;
+
+      _barStatus.options = _options.bars;
+      _beatStatus.options = _options.beats;
+      _tatumStatus.options = _options.tatums;
+      _segmentStatus.options = _options.segments;
     }
 
     public function set positionSource(positionSource:IPositionSource):void {
@@ -53,6 +62,11 @@ package com.ryanberdeen.nest {
     public function set data(data:Object):void {
       prepared = false;
       _data = data;
+
+      _barStatus.quantums = _data.bars;
+      _beatStatus.quantums = _data.beats;
+      _tatumStatus.quantums = _data.tatums;
+      _segmentStatus.quantums = _data.segments;
     }
 
     public function get position():Number {
@@ -94,10 +108,10 @@ package com.ryanberdeen.nest {
     }
 
     public function prepare():void {
-      _barStatus = new QuantumStatus(data.bars, _options.bars);
-      _beatStatus = new QuantumStatus(data.beats, _options.beats);
-      _tatumStatus = new QuantumStatus(data.tatums, _options.tatums);
-      _segmentStatus = new QuantumStatus(data.segments, _options.segments);
+      _barStatus.prepare();
+      _beatStatus.prepare();
+      _tatumStatus.prepare();
+      _segmentStatus.prepare();
 
       prepared = true;
     }
